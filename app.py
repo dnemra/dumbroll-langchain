@@ -1,6 +1,6 @@
 import streamlit as st
 import pandas as pd
-from langchain_community.chat_models import ChatTogether
+from langchain_together import ChatTogether
 from langchain.prompts import ChatPromptTemplate
 
 # ✅ Load Together API key from Streamlit secrets
