@@ -25,10 +25,10 @@ if uploaded_file:
 
         # Set up GPT-4 via LangChain
         llm = ChatOpenAI(
-            openai_api_key=openai_api_key,
-            model_name="gpt-4",
-            temperature=0
-        )
+    openai_api_key=openai_api_key,
+    model_name="gpt-3.5-turbo",
+    temperature=0
+)
 
         chain = prompt | llm
 
