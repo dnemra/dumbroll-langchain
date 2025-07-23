@@ -28,10 +28,11 @@ Return a clean, standardized table with consistent column headers.""")
 
         # ✅ Set up Together.ai LLM
         llm = ChatTogether(
-            model="mistralai/Mixtral-8x7B-Instruct-v0.1",  # You can change to other Together models
-            temperature=0,
-            together_api_key=together_api_key
-        )
+    temperature=0,
+    together_api_key=st.secrets["TOGETHER_API_KEY"],
+    model="togethercomputer/llama-2-70b-chat"
+)
+
 
         # ✅ Combine LangChain prompt and model
         chain = prompt | llm
