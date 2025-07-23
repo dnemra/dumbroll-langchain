@@ -2,5 +2,4 @@ streamlit
 pandas
 openpyxl
 langchain>=0.1.17
-langchain-community>=0.0.30
 langchain-together
