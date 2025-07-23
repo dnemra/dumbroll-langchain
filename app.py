@@ -1,12 +1,12 @@
 import streamlit as st
 import pandas as pd
-from langchain_together import ChatTogether
 from langchain.prompts import ChatPromptTemplate
+from langchain_together import ChatTogether
 
-# ✅ Load Together API key from Streamlit secrets
+# 🔐 Load Together API key securely from secrets
 together_api_key = st.secrets["TOGETHER_API_KEY"]
 
-# ✅ Streamlit UI
+# 🎯 Streamlit UI
 st.title("📊 Rent Roll Standardizer (Together.ai + LangChain)")
 
 uploaded_file = st.file_uploader("Upload your unstructured rent roll Excel file (.xlsx)", type=["xlsx"])
@@ -18,37 +18,32 @@ if uploaded_file:
         st.write("✅ Raw Input:")
         st.dataframe(df)
 
-        # ✅ Create prompt
+        # 🧠 Prompt template
         prompt = ChatPromptTemplate.from_messages([
-            ("system", "You are an expert in cleaning and structuring messy rent roll data into a clean table. Focus on standardizing property/unit/rent/deposit info."),
-            ("human", """Here is the raw rent roll data:
-{input}
-Return a clean, standardized table with consistent column headers.""")
+            ("system", "You are an expert in real estate data. Clean and standardize this messy rent roll into a clean table with consistent headers like Unit, SqFt, Rent, Start Date, End Date, Fees, Deposits."),
+            ("human", "Here is the raw rent roll:\n{input}\nReturn only a clean, formatted table.")
         ])
 
-        # ✅ Set up Together.ai LLM
+        # 🤖 Set up Together.ai LLM (using free-tier model)
         llm = ChatTogether(
-    temperature=0,
-    together_api_key=st.secrets["TOGETHER_API_KEY"],
-    model="togethercomputer/llama-2-70b-chat"
-)
+            together_api_key=together_api_key,
+            model="mistralai/Mixtral-8x7B-Instruct-v0.1",  # ✅ Free public model
+            temperature=0
+        )
 
-
-        # ✅ Combine LangChain prompt and model
+        # 🔗 Create chain
         chain = prompt | llm
 
-        # ✅ Format DataFrame into a string for the prompt
+        # 📤 Feed the prompt
         prompt_input = df.to_csv(index=False)
-
-        # ✅ Run the model
         response = chain.invoke({"input": prompt_input})
 
-        # ✅ Display result
+        # 📋 Display result
         st.markdown("### ✅ Standardized Output")
         st.write(response.content)
 
-        # ✅ Allow download
-        st.download_button("📥 Download as Text", response.content, file_name="standardized_output.txt")
+        # 💾 Download result
+        st.download_button("📥 Download as Text", response.content, file_name="standardized_rentroll.txt")
 
     except Exception as e:
         st.error(f"❌ Error: {e}")
