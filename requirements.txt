@@ -1,6 +1,7 @@
+streamlit
+pandas
 openai
 langchain>=0.1.0
 langchain-community
-pandas
-streamlit
 faiss-cpu
+openpyxl
