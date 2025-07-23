@@ -20,8 +20,19 @@ if uploaded_file:
         "You are a rent roll analyst. Clean and standardize this rent roll data: {input}"
     )
 
-    llm = ChatOpenAI(model_name="gpt-4", temperature=0)
-    chain = template | llm
+    import streamlit as st
+from langchain.chat_models import ChatOpenAI
+
+openai_api_key = st.secrets["OPENAI_API_KEY"]
+
+llm = ChatOpenAI(
+    openai_api_key=openai_api_key,
+    model_name="gpt-4",
+    temperature=0,
+)
+
+chain = template | llm
+
 
     prompt_input = df.head(10).to_csv(index=False)
     response = chain.invoke({"input": prompt_input})
