@@ -21,7 +21,7 @@ if uploaded_file:
         # Define the prompt template
         prompt = ChatPromptTemplate.from_messages([
             ("system", "You are an expert in cleaning and structuring messy rent roll data into standardized format. Convert it based on prior examples."),
-            ("human", "Here is an example of the raw rent roll:
+            ("human", "Here is an example of the raw rent roll:)
 {input}
 Return a clean and structured version.")
         ])
