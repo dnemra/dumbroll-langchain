@@ -1,13 +1,13 @@
 import streamlit as st
 import pandas as pd
-from langchain.chat_models import ChatOpenAI
+from langchain_community.chat_models import ChatTogether
 from langchain.prompts import ChatPromptTemplate
 
-# Load OpenAI API key securely
-openai_api_key = st.secrets["OPENAI_API_KEY"]
+# Load Together API key securely
+together_api_key = st.secrets["TOGETHER_API_KEY"]
 
 # Streamlit UI
-st.title("📊 Rent Roll Standardizer using GPT + LangChain")
+st.title("📊 Rent Roll Standardizer (Together.ai + LangChain)")
 
 uploaded_file = st.file_uploader("Upload your unstructured rent roll Excel file (.xlsx)", type=["xlsx"])
 
@@ -23,16 +23,16 @@ if uploaded_file:
             ("human", "Here is an example of the raw rent roll:\n{input}\nReturn a clean and structured version.")
         ])
 
-        # Set up GPT-4 via LangChain
-        llm = ChatOpenAI(
-    openai_api_key=openai_api_key,
-    model_name="gpt-3.5-turbo",
-    temperature=0
-)
+        # Set up Together.ai model
+        llm = ChatTogether(
+            together_api_key=together_api_key,
+            model="mistralai/Mixtral-8x7B-Instruct-v0.1",  # You can also try meta-llama/Llama-3-8b-chat-hf
+            temperature=0
+        )
 
         chain = prompt | llm
 
-        # Invoke the chain with the uploaded Excel content as input
+        # Run the chain
         prompt_input = df.to_csv(index=False)
         response = chain.invoke({"input": prompt_input})
 
@@ -40,7 +40,7 @@ if uploaded_file:
         st.markdown("### ✅ Standardized Output")
         st.write(response.content)
 
-        # Optionally allow export
+        # Download option
         st.download_button("Download as Text", response.content, file_name="standardized_output.txt")
 
     except Exception as e:
