@@ -2,4 +2,4 @@ streamlit
 pandas
 openpyxl
 langchain>=0.1.17
-langchain-together
+langchain-groq
